@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: aqua;
+        }
+        div{
+            display: flex;
+            justify-content: center;
+            margin-top: 100px;
+        }
+        table{
+            width: 40%;
+            height: 500px;
+        }
+        td {
+           border: 1px solid black;
+           width: 50px;
+           height: 50px;
+           text-align: center;
+           background-color: aliceblue;
+        }
+        button{
+            text-align: center;
+            background-color:cadetblue;
+            margin-left: 650px;
+            margin-top: 30px;
+            width: 200px;
+            height: 60px;
+            font-size: 24px;
+        }
+        .cellGagnant{
+            background-color: greenyellow;
+        }
+        .resetColor{
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table border="8">
+            <tr>
+                <td id="cell1" onclick="placeText('cell1')"></td>
+                <td id="cell2" onclick="placeText('cell2')"></td>
+                <td id="cell3" onclick="placeText('cell3')"></td>
+              </tr>
+              <tr>
+                <td id="cell4" onclick="placeText('cell4')"></td>
+                <td id="cell5" onclick="placeText('cell5')"></td>
+                <td id="cell6" onclick="placeText('cell6')"></td>
+              </tr>
+              <tr>
+                <td id="cell7" onclick="placeText('cell7')"></td>
+                <td id="cell8" onclick="placeText('cell8')"></td>
+                <td id="cell9" onclick="placeText('cell9')"></td>
+              </tr>
+              <tr>
+                <td colspan="3" style="font-size: 30px; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; color: rebeccapurple;">le joueur '✖️' Commencez!! </td>
+            </tr>
+        </table>
+    </div>
+    <button onclick="resetBoard()">Reset Game</button>
+    <script>
+        let currentPlayer = '✖️';
+let cells = document.querySelectorAll('td');
+
+function placeText(cellId) {
+  const cell = document.getElementById(cellId);
+  if (cell.innerText === '') {
+    cell.innerText = currentPlayer;
+    if (checkWinner()) {
+      document.querySelector('td[colspan="3"]').innerHTML=currentPlayer + ' wins!';
+    } else if (checkDraw()) {
+        document.querySelector('td[colspan="3"]').innerHTML='It\'s a draw!';
+    } else {
+      currentPlayer = currentPlayer === '✖️' ? '⭕' : '✖️';
+      updateTurnMessage();
+    }
+  }
+}
+
+function checkWinner() {
+  const winningCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (const combo of winningCombos) {
+    const [a, b, c] = combo;
+    if (cells[a].innerText !== '' && cells[a].innerText === cells[b].innerText && cells[a].innerText === cells[c].innerText) {
+      cells[a].classList.add('cellGagnant');
+      cells[b].classList.add('cellGagnant');
+      cells[c].classList.add('cellGagnant');
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkDraw() {
+  for (const cell of cells) {
+    if (cell.innerText === '') {
+      return false;
+    }
+  }
+  return true;
+}
+
+function resetBoard() {
+  for (const cell of cells) {
+    cell.innerText = '';
+    cell.classList.add('resetColor');
+  }
+  currentPlayer = '✖️';
+  updateTurnMessage();
+}
+
+function updateTurnMessage() {
+  const turnMessage = document.querySelector('td[colspan="3"]');
+  turnMessage.innerText = "Player '" + currentPlayer + "' it's your turn!";
+}
+    </script>
+</body>
+</html>
